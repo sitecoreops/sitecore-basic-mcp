@@ -67,7 +67,7 @@ jobs:
             runtime: win-x64
             repo: ghcr.io/${{ github.repository_owner }}/sbmcp-ltsc2025
             base_image: "/p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:10.0-nanoserver-ltsc2025"
-          - os:  macos-latest
+          - os: macos-latest
             runtime: osx-arm64
             repo: ""
             base_image: ""
@@ -186,6 +186,12 @@ jobs:
           name: ${{ env.BINARY_NAME }}-linux-arm64
           path: release/linux-arm64
 
+      - uses: actions/download-artifact@v5
+        name: Download artifact (osx, arm64)
+        with:
+          name: ${{ env.BINARY_NAME }}-osx-arm64
+          path: release/osx-arm64
+
       - uses: softprops/action-gh-release@v2
         name: Create Release
         with:
@@ -197,3 +203,4 @@ jobs:
             release/win-x64/${{ env.BINARY_NAME }}.exe
             release/linux-x64/${{ env.BINARY_NAME }}
             release/linux-arm64/${{ env.BINARY_NAME }}
+            release/osx-arm64/${{ env.BINARY_NAME }}
