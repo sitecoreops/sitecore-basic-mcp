@@ -67,7 +67,10 @@ jobs:
             runtime: win-x64
             repo: ghcr.io/${{ github.repository_owner }}/sbmcp-ltsc2025
             base_image: "/p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:10.0-nanoserver-ltsc2025"
-
+          - os:  macos-latest
+            runtime: osx-arm64
+            repo: ""
+            base_image: ""
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -93,6 +96,7 @@ jobs:
         run: dotnet build -c Release
 
       - name: dotnet publish as local Docker image (versioned)
+        if: matrix.repo != ''
         run: >
           dotnet publish ./src/SitecoreBasicMcp.Http
           --no-build
@@ -105,10 +109,11 @@ jobs:
           ${{ matrix.base_image }}
 
       - name: Push image (versioned)
+        if: matrix.repo != ''
         run: docker image push ${{ matrix.repo }}:${{ needs.get_version.outputs.version }}
 
       - name: Tag and push image (latest)
-        if: github.ref_type == 'tag'
+        if: matrix.repo != '' && github.ref_type == 'tag'
         run: |
           docker image tag ${{ matrix.repo }}:${{ needs.get_version.outputs.version }} ${{ matrix.repo }}:latest
           docker image push ${{ matrix.repo }}:latest
