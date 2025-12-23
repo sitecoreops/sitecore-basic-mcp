@@ -127,7 +127,6 @@ jobs:
           --self-contained
           -p:PublishSingleFile=true
           -p:EnableCompressionInSingleFile=true
-          -p:AssemblyName=${{ env.BINARY_NAME }}-${{ matrix.runtime }}
           -o ./release/${{ matrix.runtime }}
 
       - name: Upload binary artifact
