@@ -46,7 +46,7 @@ jobs:
           echo "Version is: $VERSION"
 
   build:
-    name: Build (${{ matrix.os }}, ${{ matrix.runtime }})
+    name: Build (${{ matrix.runtime }})
     runs-on: ${{ matrix.os }}
     needs: get_version
     permissions:
