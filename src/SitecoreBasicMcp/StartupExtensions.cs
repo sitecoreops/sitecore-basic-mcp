@@ -13,8 +13,6 @@ public static class StartupExtensions
         var sitecoreSection = builder.Configuration.GetSection(SitecoreSettings.Key);
         var sitecoreSettings = sitecoreSection.Get<SitecoreSettings>();
 
-        ArgumentNullException.ThrowIfNull(sitecoreSettings);
-
         builder.Services.Configure<SitecoreSettings>(sitecoreSection);
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCliUserFileAuthenticationProvider>();
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCloudAuthenticationProvider>();
