@@ -21,10 +21,10 @@ At least _one_ authentication provider must be configured, executed in order:
 - `CliUserFileAuthentication`, point to the `user.json` file created by `dotnet sitecore cloud login`
 - `CloudAuthentication`, create and use client id and secret from [SitecoreAI Deploy](https://deploy.sitecorecloud.io/) organization credentials.
 
-| Name                                            | Default                                                         | Description                              | 
-| ----------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- | 
-| Sitecore:AuthoringEndpoint                      | `https://xmcloudcm.localhost/sitecore/api/authoring/graphql/v1` | Url to the authoring endpoint            | 
-| Sitecore:CliUserFileAuthentication:FilePath     |                                                                 | Path to the Sitecore CLI user file       | 
-| Sitecore:CliUserFileAuthentication:EndpointName | `default`                                                       | The endpoint name to use                 | 
-| Sitecore:CloudAuthentication:ClientId           |                                                                 | Id with access to authoring endpoint     | 
-| Sitecore:CloudAuthentication:ClientSecret       |                                                                 | Secret with access to authoring endpoint | 
+| Name                                            | Default                                                         | Description                              |
+| ----------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
+| Sitecore:AuthoringEndpoint                      | `https://xmcloudcm.localhost/sitecore/api/authoring/graphql/v1` | Url to the authoring endpoint            |
+| Sitecore:CliUserFileAuthentication:FilePath     |                                                                 | Path to the Sitecore CLI user file       |
+| Sitecore:CliUserFileAuthentication:EndpointName | `default`                                                       | The endpoint name to use                 |
+| Sitecore:CloudAuthentication:ClientId           |                                                                 | Id with access to authoring endpoint     |
+| Sitecore:CloudAuthentication:ClientSecret       |                                                                 | Secret with access to authoring endpoint |
