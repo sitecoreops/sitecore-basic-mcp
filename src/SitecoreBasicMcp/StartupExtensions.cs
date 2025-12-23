@@ -10,10 +10,7 @@ public static class StartupExtensions
 {
     public static IMcpServerBuilder AddSitecoreMcpServer(this IHostApplicationBuilder builder)
     {
-        var sitecoreSection = builder.Configuration.GetSection(SitecoreSettings.Key);
-        var sitecoreSettings = sitecoreSection.Get<SitecoreSettings>();
-
-        builder.Services.Configure<SitecoreSettings>(sitecoreSection);
+        builder.Services.Configure<SitecoreSettings>(builder.Configuration.GetSection(SitecoreSettings.Key));
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCliUserFileAuthenticationProvider>();
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCloudAuthenticationProvider>();
         builder.Services.AddSingleton<SitecoreAuthenticationService>();
