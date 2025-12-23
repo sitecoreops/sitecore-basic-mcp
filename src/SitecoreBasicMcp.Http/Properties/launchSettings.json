@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SitecoreBasicMcp.Server": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://*:9001"
+    }
+  }
+}

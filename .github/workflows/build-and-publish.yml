@@ -1,0 +1,92 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  DOCKER_IMAGE_NAME: 'sitecore-basic-mcp'
+  BINARY_NAME: 'sitecore-basic-mcp'
+
+jobs:
+  build:
+    name: Build Solution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            **/bin/Release/**/*.dll
+            **/bin/Release/**/*.exe
+            **/bin/Release/**/*.pdb
+
+  publish-docker:
+    name: Publish Docker Image
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish for Docker
+        run: dotnet publish src/SitecoreBasicMcp.Http/SitecoreBasicMcp.Http.csproj --configuration Release --output ./publish-docker
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+
+  publish-binaries:
+    name: Publish Native Binaries
+    needs: build
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish self-contained binary
+        run: dotnet publish src/SitecoreBasicMcp.Stdio/SitecoreBasicMcp.Stdio.csproj --configuration Release --output ./publish-binaries --self-contained true -r ${{ matrix.os == 'windows-latest' && 'win-x64' || matrix.os == 'ubuntu-latest' && 'linux-x64' || 'osx-x64' }}
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-${{ matrix.os }}
+          path: ./publish-binaries/

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/SitecoreBasicMcp.Http/SitecoreBasicMcp.Http.csproj" />
+  <Project Path="src/SitecoreBasicMcp.Stdio/SitecoreBasicMcp.Stdio.csproj" />
+  <Project Path="src/SitecoreBasicMcp/SitecoreBasicMcp.csproj" />
+</Solution>

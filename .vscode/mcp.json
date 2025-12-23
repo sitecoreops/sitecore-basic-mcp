@@ -1,0 +1,17 @@
+{
+    "servers": {
+        "sitecore-flakfort-mcp-http": {
+            "url": "http://localhost:9001",
+            "type": "http"
+        },
+        "sitecore-flakfort-mcp-stdio": {
+            "type": "stdio",
+            "command": "dotnet",
+            "args": [
+                "run",
+                "--project",
+                "./src/SitecoreFlakfortMcp.Stdio"
+            ]
+        }
+    }
+}
