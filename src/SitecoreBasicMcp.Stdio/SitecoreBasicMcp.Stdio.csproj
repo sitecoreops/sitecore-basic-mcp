@@ -4,7 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>sbmcp-$(RuntimeIdentifier)</AssemblyName>
+    <AssemblyName Condition="'$(RuntimeIdentifier)' == ''">sbmcp</AssemblyName>
+    <AssemblyName Condition="'$(RuntimeIdentifier)' != ''">sbmcp-$(RuntimeIdentifier)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
