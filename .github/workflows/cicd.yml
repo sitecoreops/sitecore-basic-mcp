@@ -186,6 +186,7 @@ jobs:
           tag_name: v${{ needs.get_version.outputs.version }}
           name: v${{ needs.get_version.outputs.version }}
           generate_release_notes: true
+          prerelease: ${{ contains(needs.get_version.outputs.version, '-') }}
           files: |
             release/win-x64/${{ env.BINARY_NAME }}.exe
             release/linux-x64/${{ env.BINARY_NAME }}
