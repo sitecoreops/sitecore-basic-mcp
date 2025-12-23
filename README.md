@@ -5,7 +5,7 @@ Minimalistic CRUD only MCP Server for SitecoreAI (local and remote instances).
 Available as:
 
 1. Multi arch Docker image: `docker pull ghcr.io/sitecoreops/sbmcp:latest` (Windows, Linux x64 and Linux ARM64)
-1. Native binaries for Windows x64, Linux x64, Linux ARM64 and macOS ARM64, see [release](https://github.com/sitecoreops/sitecore-basic-mcp/releases).
+1. Native binaries for Windows x64, Linux x64, Linux ARM64 and macOS ARM64, see [releases](https://github.com/sitecoreops/sitecore-basic-mcp/releases).
 
 When you have configured your MCP client, try out these prompts:
 
