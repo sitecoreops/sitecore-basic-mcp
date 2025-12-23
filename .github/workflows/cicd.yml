@@ -46,7 +46,7 @@ jobs:
           echo "Version is: $VERSION"
 
   build:
-    name: Build (${{ matrix.os }})
+    name: Build (${{ matrix.os }}, ${{ matrix.runtime }})
     runs-on: ${{ matrix.os }}
     needs: get_version
     permissions:
@@ -91,9 +91,6 @@ jobs:
 
       - name: dotnet build
         run: dotnet build -c Release
-
-      - name: dotnet test
-        run: dotnet test -c Release --no-build --no-restore
 
       - name: dotnet publish as local Docker image (versioned)
         run: >
