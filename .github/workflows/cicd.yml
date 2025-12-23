@@ -201,7 +201,6 @@ jobs:
           generate_release_notes: true
           prerelease: ${{ contains(needs.get_version.outputs.version, '-') }}
           files: |
-            release/win-x64/appsettings.json
             release/win-x64/${{ env.BINARY_NAME }}-win-x64.exe
             release/linux-x64/${{ env.BINARY_NAME }}-linux-x64
             release/linux-arm64/${{ env.BINARY_NAME }}-linux-arm64

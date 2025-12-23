@@ -1,16 +1,16 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
 namespace SitecoreBasicMcp.Authentication;
 
-public class SitecoreCloudAuthenticationProvider(IConfiguration configuration, IHttpClientFactory httpClientFactory, ILogger<SitecoreCloudAuthenticationProvider> logger) : IAuthenticationProvider
+public class SitecoreCloudAuthenticationProvider(IOptions<SitecoreSettings> options, IHttpClientFactory httpClientFactory, ILogger<SitecoreCloudAuthenticationProvider> logger) : IAuthenticationProvider
 {
     private readonly ConcurrentDictionary<string, BearerToken> _tokens = new();
     private readonly Uri _authenticationTokenUri = new("https://auth.sitecorecloud.io/oauth/token");
-    private readonly string? _clientId = configuration["Sitecore:CloudAuthentication:ClientId"];
-    private readonly string? _clientSecret = configuration["Sitecore:CloudAuthentication:ClientSecret"];
+    private readonly string? _clientId = options.Value.CloudAuthentication.ClientId;
+    private readonly string? _clientSecret = options.Value.CloudAuthentication.ClientSecret;
 
     public async ValueTask<BearerToken?> GetTokenAsync(CancellationToken cancellationToken)
     {

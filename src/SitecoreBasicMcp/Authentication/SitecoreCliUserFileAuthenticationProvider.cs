@@ -1,13 +1,13 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace SitecoreBasicMcp.Authentication;
 
-public class SitecoreCliUserFileAuthenticationProvider(IConfiguration configuration, ILogger<SitecoreCliUserFileAuthenticationProvider> logger) : IAuthenticationProvider
+public class SitecoreCliUserFileAuthenticationProvider(IOptions<SitecoreSettings> options, ILogger<SitecoreCliUserFileAuthenticationProvider> logger) : IAuthenticationProvider
 {
-    private readonly string? _endpointName = configuration["Sitecore:CliUserFileAuthentication:EndpointName"];
-    private readonly string? _sitecoreCliUserFilePath = configuration["Sitecore:CliUserFileAuthentication:FilePath"];
+    private readonly string? _endpointName = options.Value.CliUserFileAuthentication.EndpointName;
+    private readonly string? _sitecoreCliUserFilePath = options.Value.CliUserFileAuthentication.FilePath;
 
     public async ValueTask<BearerToken?> GetTokenAsync(CancellationToken cancellationToken)
     {

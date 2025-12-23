@@ -1,5 +1,5 @@
 using GraphQL;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol.Server;
 using SitecoreBasicMcp.Authentication;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace SitecoreBasicMcp.Tools;
 
 [McpServerToolType]
-public class DeleteItemTool(IConfiguration configuration, SitecoreAuthenticationService authenticationService) : SitecoreAuthoringToolBase(configuration, authenticationService)
+public class DeleteItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService) : SitecoreAuthoringToolBase(options, authenticationService)
 {
     private static readonly string _deleteItemMutation = """
             mutation DeleteItem($path: String!) {

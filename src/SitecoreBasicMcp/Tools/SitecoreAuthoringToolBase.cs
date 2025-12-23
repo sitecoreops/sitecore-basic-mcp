@@ -1,7 +1,7 @@
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using SitecoreBasicMcp.Authentication;
@@ -9,12 +9,17 @@ using System.Text.Json;
 
 namespace SitecoreBasicMcp.Tools;
 
-public abstract class SitecoreAuthoringToolBase(IConfiguration configuration, SitecoreAuthenticationService authenticationService)
+public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService)
 {
-    private readonly string _authoringEndpointUrl = configuration["Sitecore:AuthoringEndpoint"] ?? throw new ArgumentNullException("Sitecore:AuthoringEndpoint");
+    private readonly string? _authoringEndpointUrl = options.Value.AuthoringEndpoint;
 
     protected async Task<GraphQLHttpClient> GetAuthoringClient(CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(_authoringEndpointUrl))
+        {
+            throw new Exception("AuthoringEndpoint is not configured.");
+        }
+
         var token = await authenticationService.GetTokenAsync(cancellationToken);
         var authoringClient = new GraphQLHttpClient(_authoringEndpointUrl, new SystemTextJsonSerializer(new JsonSerializerOptions(McpJsonUtilities.DefaultOptions)));
 

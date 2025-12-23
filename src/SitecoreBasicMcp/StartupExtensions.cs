@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Protocol;
 using SitecoreBasicMcp.Authentication;
 
@@ -6,11 +8,19 @@ namespace SitecoreBasicMcp;
 
 public static class StartupExtensions
 {
-    public static IMcpServerBuilder AddSitecoreMcpServer(this IServiceCollection services)
+    public static IMcpServerBuilder AddSitecoreMcpServer(this IHostApplicationBuilder builder)
     {
-        var serverBuilder = services.AddSingleton<IAuthenticationProvider, SitecoreCliUserFileAuthenticationProvider>()
-            .AddSingleton<IAuthenticationProvider, SitecoreCloudAuthenticationProvider>()
-            .AddSingleton<SitecoreAuthenticationService>()
+        var sitecoreSection = builder.Configuration.GetSection(SitecoreSettings.Key);
+        var sitecoreSettings = sitecoreSection.Get<SitecoreSettings>();
+
+        ArgumentNullException.ThrowIfNull(sitecoreSettings);
+
+        builder.Services.Configure<SitecoreSettings>(sitecoreSection);
+        builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCliUserFileAuthenticationProvider>();
+        builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCloudAuthenticationProvider>();
+        builder.Services.AddSingleton<SitecoreAuthenticationService>();
+
+        var serverBuilder = builder.Services
             .AddHttpClient()
             .AddMcpServer()
             .WithToolsFromAssembly(typeof(AssemblyMarker).Assembly)

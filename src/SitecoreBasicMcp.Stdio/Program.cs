@@ -7,7 +7,7 @@ builder.Logging.AddConsole(consoleLogOptions =>
     consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
 });
 
-builder.Services.AddSitecoreMcpServer()
+builder.AddSitecoreMcpServer()
     .WithStdioServerTransport();
 
 await builder.Build().RunAsync();
