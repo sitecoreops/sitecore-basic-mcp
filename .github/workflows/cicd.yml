@@ -135,6 +135,7 @@ jobs:
         with:
           name: ${{ env.BINARY_NAME }}-${{ matrix.runtime }}
           path: release/${{ matrix.runtime }}
+          if-no-files-found: error
 
   create_manifest:
     name: Create Docker manifests
