@@ -65,7 +65,7 @@ jobs:
             base_image: ""
           - os: windows-2025
             runtime: win-x64
-            repo: ghcr.io/${{ github.repository_owner }}/sbmcp-windows
+            repo: ghcr.io/${{ github.repository_owner }}/sbmcp-ltsc2025
             base_image: "/p:ContainerBaseImage=mcr.microsoft.com/dotnet/aspnet:10.0-nanoserver-ltsc2025"
 
     steps:
