@@ -45,14 +45,9 @@ public class CreateItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
         var client = await GetAuthoringClient(cancellationToken);
         var resolveItemIdResult = await ResolveItemId(parentPathOrId, language, client, cancellationToken);
 
-        if (resolveItemIdResult.GraphQLErrors != null)
+        if (resolveItemIdResult.ErrorResult != null)
         {
-            return ErrorResultFromGraphQL(resolveItemIdResult.GraphQLErrors);
-        }
-
-        if (resolveItemIdResult.ErrorMessage == null)
-        {
-            return ErrorResult("Parent id could not be resolved.");
+            return resolveItemIdResult.ErrorResult;
         }
 
         var parentId = resolveItemIdResult.ItemId;

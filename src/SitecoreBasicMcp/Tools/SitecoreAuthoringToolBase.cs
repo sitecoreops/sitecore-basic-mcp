@@ -62,14 +62,14 @@ public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> optio
 
             if (getItemResponse.Errors != null)
             {
-                return new ResolveItemIdResults(GraphQLErrors: getItemResponse.Errors);
+                return new ResolveItemIdResults(ErrorResult: ErrorResultFromGraphQL(getItemResponse.Errors));
             }
 
             var item = getItemResponse.Data.Item;
 
             if (item == null)
             {
-                return new ResolveItemIdResults(ErrorMessage: "Parent item was not found.");
+                return new ResolveItemIdResults(ErrorResult: ErrorResult("Parent item was not found."));
             }
 
             itemId = getItemResponse?.Data?.Item?.Id;
@@ -101,4 +101,4 @@ public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> optio
     };
 }
 
-public record ResolveItemIdResults(string? ItemId = null, string? ErrorMessage = null, GraphQLError[]? GraphQLErrors = null);
+public record ResolveItemIdResults(string? ItemId = null, CallToolResult? ErrorResult = null);
