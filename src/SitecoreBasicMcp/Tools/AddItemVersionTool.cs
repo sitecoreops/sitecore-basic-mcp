@@ -25,7 +25,7 @@ public class AddItemVersionTool(IOptions<SitecoreSettings> options, SitecoreAuth
     record CreateItemData(BasicItem Item);
     record CreateItemMutationResponse(CreateItemData CreateItem);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Add a new Sitecore item version in a specific langauge.")]
+    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Add a new version to a Sitecore item by its path or id.")]
     public async Task<object> AddItemVersion(string pathOrId, string language, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
