@@ -11,7 +11,17 @@ namespace SitecoreBasicMcp.Tools;
 
 public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService)
 {
+    record GetItemQueryResponse(BasicItem? Item);
     private readonly string? _authoringEndpointUrl = options.Value.AuthoringEndpoint;
+    private static readonly string _getItemQuery = """
+            query GetItem($path: String, $language: String!) {
+              item(where: { path: $path, language: $language }) {
+                id: itemId
+                path
+                name
+              }
+            }
+            """;
 
     protected async Task<GraphQLHttpClient> GetAuthoringClient(CancellationToken cancellationToken)
     {
@@ -28,7 +38,47 @@ public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> optio
         return authoringClient;
     }
 
-    protected static CallToolResult ErrorResultFromGraphQL(GraphQLError[] errors)
+
+    protected async Task<ResolveItemIdResults> ResolveItemId(string pathOrId, string language, GraphQLHttpClient client, CancellationToken cancellationToken)
+    {
+        string? itemId;
+
+        if (Guid.TryParse(pathOrId, out _))
+        {
+            itemId = pathOrId;
+        }
+        else
+        {
+            var getItemRequestg = new GraphQLRequest(_getItemQuery)
+            {
+                Variables = new
+                {
+                    path = pathOrId,
+                    language
+                }
+            };
+
+            var getItemResponse = await client.SendQueryAsync<GetItemQueryResponse>(getItemRequestg, cancellationToken);
+
+            if (getItemResponse.Errors != null)
+            {
+                return new ResolveItemIdResults(GraphQLErrors: getItemResponse.Errors);
+            }
+
+            var item = getItemResponse.Data.Item;
+
+            if (item == null)
+            {
+                return new ResolveItemIdResults(ErrorMessage: "Parent item was not found.");
+            }
+
+            itemId = getItemResponse?.Data?.Item?.Id;
+        }
+
+        return new ResolveItemIdResults(ItemId: itemId);
+    }
+
+    protected CallToolResult ErrorResultFromGraphQL(GraphQLError[] errors)
     {
         var errorContent = new List<ContentBlock>();
 
@@ -44,10 +94,11 @@ public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> optio
         };
     }
 
-    protected static CallToolResult ErrorResult(string text) => new()
+    protected CallToolResult ErrorResult(string text) => new()
     {
         Content = [new TextContentBlock { Text = text }],
         IsError = true
     };
 }
 
+public record ResolveItemIdResults(string? ItemId = null, string? ErrorMessage = null, GraphQLError[]? GraphQLErrors = null);

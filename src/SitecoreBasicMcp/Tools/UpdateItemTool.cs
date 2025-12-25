@@ -20,6 +20,7 @@ public class UpdateItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
                   id: itemId
                   path
                   name
+                  version
                 }
               }
             }

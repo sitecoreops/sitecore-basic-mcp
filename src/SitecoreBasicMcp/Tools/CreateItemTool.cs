@@ -30,62 +30,32 @@ public class CreateItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
                   id: itemId
                   path
                   name
+                  version
                 }
-              }
-            }
-            """;
-    private static readonly string _getItemQuery = """
-            query GetItem($path: String, $language: String!) {
-              item(where: { path: $path, language: $language }) {
-                id: itemId
-                path
-                name
               }
             }
             """;
 
     record CreateItemData(BasicItem Item);
     record CreateItemMutationResponse(CreateItemData CreateItem);
-    record GetItemQueryResponse(BasicItem? Item);
 
     [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Create a new Sitecore item under parent id or path.")]
     public async Task<object> CreateItem(string parentPathOrId, string name, string templateId, string language, Field[] fields, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
-        string parentId;
+        var resolveItemIdResult = await ResolveItemId(parentPathOrId, language, client, cancellationToken);
 
-        if (Guid.TryParse(parentPathOrId, out _))
+        if (resolveItemIdResult.GraphQLErrors != null)
         {
-            parentId = parentPathOrId;
-        }
-        else
-        {
-            var getParentRequest = new GraphQLRequest(_getItemQuery)
-            {
-                Variables = new
-                {
-                    path = parentPathOrId,
-                    language
-                }
-            };
-
-            var gerParentResponse = await client.SendQueryAsync<GetItemQueryResponse>(getParentRequest, cancellationToken);
-
-            if (gerParentResponse.Errors != null)
-            {
-                return ErrorResultFromGraphQL(gerParentResponse.Errors);
-            }
-
-            var parentItem = gerParentResponse.Data.Item;
-
-            if (parentItem == null)
-            {
-                return ErrorResult("Parent item was not found.");
-            }
-
-            parentId = parentItem.Id;
+            return ErrorResultFromGraphQL(resolveItemIdResult.GraphQLErrors);
         }
 
+        if (resolveItemIdResult.ErrorMessage == null)
+        {
+            return ErrorResult("Parent id could not be resolved.");
+        }
+
+        var parentId = resolveItemIdResult.ItemId;
         var request = new GraphQLRequest(_createItemMutation)
         {
             Variables = new

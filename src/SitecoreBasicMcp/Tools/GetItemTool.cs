@@ -15,6 +15,7 @@ public class GetItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticat
                 id: itemId
                 path
                 name
+                version
                 template {
                   id: templateId
                   fullName
@@ -24,12 +25,14 @@ public class GetItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticat
                   id: itemId
                   path
                   name
+                  version
                 }
                 children {
                   nodes {
                     id: itemId
                     path
                     name
+                    version
                   }
                 }
                 fields(ownFields:$ownFields) {
