@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace SitecoreBasicMcp.Tools;
 
 [McpServerToolType]
-public class AddItemVersionTool(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService) : SitecoreAuthoringToolBase(options, authenticationService)
+public class CreateItemVersionTool(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService) : SitecoreAuthoringToolBase(options, authenticationService)
 {
     private static readonly string _addItemVersionMutation = """
             mutation AddItemVersion($itemId: ID!, $language: String!) {
@@ -22,11 +22,11 @@ public class AddItemVersionTool(IOptions<SitecoreSettings> options, SitecoreAuth
             }
             """;
 
-    record CreateItemData(BasicItem Item);
-    record CreateItemMutationResponse(CreateItemData CreateItem);
+    record AddItemVersionData(BasicItem Item);
+    record AddItemVersionMutationResponse(AddItemVersionData AddItemVersion);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Add a new version to a Sitecore item by its path or id.")]
-    public async Task<object> AddItemVersion(string pathOrId, string language, CancellationToken cancellationToken)
+    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Create a new language version to a Sitecore item by its path or id.")]
+    public async Task<object> CreateItemVersion(string pathOrId, string language, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
         var resolveItemIdResult = await ResolveItemId(pathOrId, language, client, cancellationToken);
@@ -46,14 +46,14 @@ public class AddItemVersionTool(IOptions<SitecoreSettings> options, SitecoreAuth
             }
         };
 
-        var response = await client.SendMutationAsync<CreateItemMutationResponse>(request, cancellationToken);
+        var response = await client.SendMutationAsync<AddItemVersionMutationResponse>(request, cancellationToken);
 
         if (response.Errors != null)
         {
             return ErrorResultFromGraphQL(response.Errors);
         }
 
-        return response.Data.CreateItem.Item;
+        return response.Data.AddItemVersion.Item;
     }
 }
 

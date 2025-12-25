@@ -11,9 +11,10 @@ When you have configured your MCP client, try out these prompts:
 
 ```text
 "Show me a key value list of fields on the /sitecore/content/home item"
-"Create a new item named test42 under /sitecore/content/home using template
-76036F5E-CBCE-46D1-AF0A-4143F9B557AA and set the title field to Just testing"
+"Create a new item named test42 under /sitecore/content/home using template 76036F5E-CBCE-46D1-AF0A-4143F9B557AA and set the title field to Just testing"
 "Update the item /sitecore/content/home/test42, set the title field to Even more testing and the text field to Hello MCP"
+"Create new 'da-dk' version on /sitecore/content/home/test42, set the title field to 'hej' and then print the new version number"
+"Get the current language version for 'da-DK' on the  /sitecore/content/home/test42 item, keep deleting versions until there are no more versions"
 "Delete the item /sitecore/content/home/test42"
 ```
 
