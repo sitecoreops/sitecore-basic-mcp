@@ -41,19 +41,24 @@ public class SitecoreCliUserFileAuthenticationProvider(IOptions<SitecoreSettings
             throw new SitecoreCliUserFileException($"Sitecore endpoint '{_endpointName}' not found in user file.");
         }
 
-        var referencedEndpoint = config.Endpoints.Where(x => string.Equals(x.Key, endpoint.Ref, StringComparison.OrdinalIgnoreCase)).FirstOrDefault().Value;
-
-        if (referencedEndpoint == null)
+        if (!string.IsNullOrEmpty(endpoint.Ref))
         {
-            throw new SitecoreCliUserFileException($"Sitecore reference endpoint '{endpoint.Ref}' not found in user file.");
+            var referencedEndpoint = config.Endpoints.Where(x => string.Equals(x.Key, endpoint.Ref, StringComparison.OrdinalIgnoreCase)).FirstOrDefault().Value;
+
+            if (referencedEndpoint == null)
+            {
+                throw new SitecoreCliUserFileException($"Sitecore reference endpoint '{endpoint.Ref}' not found in user file.");
+            }
+
+            endpoint = referencedEndpoint;
         }
 
-        if (string.IsNullOrWhiteSpace(referencedEndpoint.AccessToken))
+        if (string.IsNullOrWhiteSpace(endpoint.AccessToken))
         {
             throw new SitecoreCliUserFileException("Access token was empty or whitespace.");
         }
 
-        var token = new BearerToken(referencedEndpoint.AccessToken, referencedEndpoint.LastUpdated.AddSeconds(referencedEndpoint.ExpiresIn));
+        var token = new BearerToken(endpoint.AccessToken, endpoint.LastUpdated.AddSeconds(endpoint.ExpiresIn));
 
         if (!token.IsValid())
         {

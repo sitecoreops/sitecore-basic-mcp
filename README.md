@@ -31,6 +31,6 @@ At least _one_ authentication provider must be configured, executed in order:
 | ----------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
 | Sitecore:AuthoringEndpoint                      | `https://xmcloudcm.localhost/sitecore/api/authoring/graphql/v1` | Url to the authoring endpoint            |
 | Sitecore:CliUserFileAuthentication:FilePath     |                                                                 | Path to the Sitecore CLI user file       |
-| Sitecore:CliUserFileAuthentication:EndpointName | `default`                                                       | The endpoint name to use                 |
+| Sitecore:CliUserFileAuthentication:EndpointName | `xmCloud`                                                       | The endpoint name to use                 |
 | Sitecore:CloudAuthentication:ClientId           |                                                                 | Id with access to authoring endpoint     |
 | Sitecore:CloudAuthentication:ClientSecret       |                                                                 | Secret with access to authoring endpoint |

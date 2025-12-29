@@ -12,7 +12,7 @@ public class SitecoreSettings
 
     public class CliUserFileAuthenticationSettings
     {
-        public string? EndpointName { get; set; } = "default";
+        public string? EndpointName { get; set; } = "xmCloud";
         public string? FilePath { get; set; }
     }
 
