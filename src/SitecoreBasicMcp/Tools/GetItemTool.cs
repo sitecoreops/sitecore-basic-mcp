@@ -1,8 +1,10 @@
 using GraphQL;
 using Microsoft.Extensions.Options;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using SitecoreBasicMcp.Authentication;
 using System.ComponentModel;
+using System.Text.Json;
 
 namespace SitecoreBasicMcp.Tools;
 
@@ -10,32 +12,30 @@ namespace SitecoreBasicMcp.Tools;
 public class GetItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticationService authenticationService) : SitecoreAuthoringToolBase(options, authenticationService)
 {
     private static readonly string _getItemQuery = """
-            query GetItem($path: String, $language: String, $ownFields: Boolean) {
+            fragment BasicItem on Item {
+              id: itemId
+              name
+              path
+              version
+            }
+
+            query GetItem($path: String, $language: String!) {
               item(where: { path: $path, language: $language }) {
-                id: itemId
-                path
-                name
-                version
+                ...BasicItem
                 template {
                   id: templateId
                   fullName
                   name
                 }
                 parent {
-                  id: itemId
-                  path
-                  name
-                  version
+                  ...BasicItem
                 }
                 children {
                   nodes {
-                    id: itemId
-                    path
-                    name
-                    version
+                    ...BasicItem
                   }
                 }
-                fields(ownFields:$ownFields) {
+                fields(ownFields: true) {
                   nodes {
                     name
                     value
@@ -47,8 +47,8 @@ public class GetItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticat
 
     record GetItemQueryResponse(Item? Item);
 
-    [McpServerTool(Idempotent = true, ReadOnly = true, UseStructuredContent = true), Description("Get a Sitecore item by its path or id.")]
-    public async Task<object> GetItem(string pathOrId, CancellationToken cancellationToken, string language = "en", bool includeStandardFields = false)
+    [McpServerTool(Idempotent = true, ReadOnly = true), Description("Get a Sitecore item by its path or id.")]
+    public async Task<CallToolResult> GetItem(string pathOrId, CancellationToken cancellationToken, string language = "en", bool includeStandardFields = false)
     {
         var client = await GetAuthoringClient(cancellationToken);
         var request = new GraphQLRequest(_getItemQuery)
@@ -75,6 +75,6 @@ public class GetItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenticat
             return ErrorResult("Item was not found.");
         }
 
-        return item;
+        return ItemResult(item);
     }
 }

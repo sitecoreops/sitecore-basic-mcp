@@ -1,5 +1,6 @@
 using GraphQL;
 using Microsoft.Extensions.Options;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using SitecoreBasicMcp.Authentication;
 using System.ComponentModel;
@@ -24,8 +25,8 @@ public class DeleteItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
     record DeleteItemData(bool Successful);
     record DeleteItemMutationResponse(DeleteItemData DeleteItem);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Delete a Sitecore item by its path or id.")]
-    public async Task<object> DeleteItem(string pathOrId, CancellationToken cancellationToken)
+    [McpServerTool(Idempotent = false, ReadOnly = false), Description("Delete a Sitecore item by its path or id.")]
+    public async Task<CallToolResult> DeleteItem(string pathOrId, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
         var request = new GraphQLRequest(_deleteItemMutation)
@@ -43,6 +44,14 @@ public class DeleteItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
             return ErrorResultFromGraphQL(response.Errors);
         }
 
-        return response.Data.DeleteItem.Successful;
+        if (!response.Data.DeleteItem.Successful)
+        {
+            return ErrorResult("Item was not deleted.");
+        }
+
+        return new()
+        {
+            Content = [new TextContentBlock { Text = "Item was deleted." }],
+        };
     }
 }

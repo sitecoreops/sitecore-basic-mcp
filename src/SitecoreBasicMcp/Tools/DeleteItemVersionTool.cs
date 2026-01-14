@@ -1,5 +1,6 @@
 using GraphQL;
 using Microsoft.Extensions.Options;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using SitecoreBasicMcp.Authentication;
 using System.ComponentModel;
@@ -27,8 +28,8 @@ public class DeleteItemVersionTool(IOptions<SitecoreSettings> options, SitecoreA
     record DeleteItemVersionData(BasicItem Item);
     record DeleteItemMutationResponse(DeleteItemVersionData DeleteItemVersion);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Delete a language version on a Sitecore item by its path or id.")]
-    public async Task<object> DeleteItemVersion(string pathOrId, string language, int version, CancellationToken cancellationToken)
+    [McpServerTool(Idempotent = false, ReadOnly = false), Description("Delete a language version on a Sitecore item by its path or id.")]
+    public async Task<CallToolResult> DeleteItemVersion(string pathOrId, string language, int version, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
         var resolveItemIdResult = await ResolveItemId(pathOrId, language, client, cancellationToken);
@@ -56,6 +57,6 @@ public class DeleteItemVersionTool(IOptions<SitecoreSettings> options, SitecoreA
             return ErrorResultFromGraphQL(response.Errors);
         }
 
-        return response.Data.DeleteItemVersion.Item;
+        return ItemResult(response.Data.DeleteItemVersion.Item);
     }
 }

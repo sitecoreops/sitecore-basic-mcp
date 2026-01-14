@@ -39,7 +39,7 @@ public class CreateItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
     record CreateItemData(BasicItem Item);
     record CreateItemMutationResponse(CreateItemData CreateItem);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Create a new Sitecore item under parent id or path.")]
+    [McpServerTool(Idempotent = false, ReadOnly = false), Description("Create a new Sitecore item under parent id or path.")]
     public async Task<object> CreateItem(string parentPathOrId, string name, string templateId, string language, Field[] fields, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
@@ -70,7 +70,7 @@ public class CreateItemTool(IOptions<SitecoreSettings> options, SitecoreAuthenti
             return ErrorResultFromGraphQL(response.Errors);
         }
 
-        return response.Data.CreateItem.Item;
+        return ItemResult(response.Data.CreateItem.Item);
     }
 }
 
