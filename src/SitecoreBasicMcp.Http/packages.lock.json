@@ -4,11 +4,11 @@
     "net10.0": {
       "ModelContextProtocol.AspNetCore": {
         "type": "Direct",
-        "requested": "[0.5.0-preview.1, )",
-        "resolved": "0.5.0-preview.1",
-        "contentHash": "4KYK/rc6E8uuSJorludY/0Gpcm0wCXT5BGyZPcLRHisMT+cqW/P6lOv5luQZvy6iOxhwMmTMmY7DzU+VKVvjaw==",
+        "requested": "[0.6.0-preview.1, )",
+        "resolved": "0.6.0-preview.1",
+        "contentHash": "UltrLduMY0CRzh4XZAx3hp9fQeprxeVqd8hXhKWlBRib2WUo8yAavTy5yQZrel4JnbjfGGN77dXPyphshpwvbQ==",
         "dependencies": {
-          "ModelContextProtocol": "0.5.0-preview.1"
+          "ModelContextProtocol": "0.6.0-preview.1"
         }
       },
       "GraphQL.Client": {
@@ -52,23 +52,23 @@
       },
       "Microsoft.Extensions.AI.Abstractions": {
         "type": "Transitive",
-        "resolved": "10.0.0",
-        "contentHash": "PHeuDm2tC6wJPEQvleUr2kNQaIMNqSf3aEbzkIPlZyQ0+0SYI9SwXVLdGD1NPBI+xB+Vb2lxZKhrFlIf9kP9WA=="
+        "resolved": "10.1.1",
+        "contentHash": "cgj8iHv4JwUpcPANZ0oLILz146Y1Oa+l280b1c1a3DjwZflH9nmYcrX952YUuqftz2sheAC2TPCGcEa6unKQgQ=="
       },
       "ModelContextProtocol": {
         "type": "Transitive",
-        "resolved": "0.5.0-preview.1",
-        "contentHash": "QJpuNEnMZLJmvASbZ2nvMqENTZk3HYF83IihoHs3EJ5vTlz4sYjji9bXh2HP5UxpXIdHGn0iuHu0X2Tpq2zilw==",
+        "resolved": "0.6.0-preview.1",
+        "contentHash": "onUtGV9yny1rFZQ1qGUp6XPJBB2VxvWXvEioq8+/8hYOX6zEoc/Mc4tX8u7KRhU1mLss48jMh5DHFBMKifMiVw==",
         "dependencies": {
-          "ModelContextProtocol.Core": "0.5.0-preview.1"
+          "ModelContextProtocol.Core": "0.6.0-preview.1"
         }
       },
       "ModelContextProtocol.Core": {
         "type": "Transitive",
-        "resolved": "0.5.0-preview.1",
-        "contentHash": "33V1Druluweou6x2LN6MSMbhiwHOYZxTUEJ1okFKjYDRIthctTVe0EJi//nifl4MRld2b5D5LnuV9sezz54p6g==",
+        "resolved": "0.6.0-preview.1",
+        "contentHash": "vjpbeJL7O4kNAgwv6wZtqlAAUX/tWaYLtbBzENDablIQfI1bH2tYTD/eK/6JvxP+Qp1H/lXaMvuRM6wohAzauA==",
         "dependencies": {
-          "Microsoft.Extensions.AI.Abstractions": "10.0.0"
+          "Microsoft.Extensions.AI.Abstractions": "10.1.1"
         }
       },
       "System.Reactive": {
@@ -81,7 +81,7 @@
         "dependencies": {
           "GraphQL.Client": "[6.1.0, )",
           "GraphQL.Client.Serializer.SystemTextJson": "[6.1.0, )",
-          "ModelContextProtocol": "[0.5.0-preview.1, )"
+          "ModelContextProtocol": "[0.6.0-preview.1, )"
         }
       }
     }

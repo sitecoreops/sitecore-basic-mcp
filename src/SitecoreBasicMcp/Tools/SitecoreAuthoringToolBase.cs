@@ -99,6 +99,22 @@ public abstract class SitecoreAuthoringToolBase(IOptions<SitecoreSettings> optio
         Content = [new TextContentBlock { Text = text }],
         IsError = true
     };
+
+    protected CallToolResult ItemResult<T>(T item) where T : BasicItem
+    {
+        var node = JsonSerializer.SerializeToNode(item);
+
+        if (node == null)
+        {
+            return ErrorResult("Node was null, item could not be serialized.");
+        }
+
+        return new()
+        {
+
+            Content = [new TextContentBlock { Text = node.ToJsonString() }],
+        };
+    }
 }
 
 public record ResolveItemIdResults(string? ItemId = null, CallToolResult? ErrorResult = null);

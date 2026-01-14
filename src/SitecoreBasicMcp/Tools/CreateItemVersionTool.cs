@@ -1,5 +1,6 @@
 using GraphQL;
 using Microsoft.Extensions.Options;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using SitecoreBasicMcp.Authentication;
 using System.ComponentModel;
@@ -25,8 +26,8 @@ public class CreateItemVersionTool(IOptions<SitecoreSettings> options, SitecoreA
     record AddItemVersionData(BasicItem Item);
     record AddItemVersionMutationResponse(AddItemVersionData AddItemVersion);
 
-    [McpServerTool(Idempotent = false, ReadOnly = false, UseStructuredContent = true), Description("Create a new language version to a Sitecore item by its path or id.")]
-    public async Task<object> CreateItemVersion(string pathOrId, string language, CancellationToken cancellationToken)
+    [McpServerTool(Idempotent = false, ReadOnly = false), Description("Create a new language version to a Sitecore item by its path or id.")]
+    public async Task<CallToolResult> CreateItemVersion(string pathOrId, string language, CancellationToken cancellationToken)
     {
         var client = await GetAuthoringClient(cancellationToken);
         var resolveItemIdResult = await ResolveItemId(pathOrId, language, client, cancellationToken);
@@ -53,7 +54,7 @@ public class CreateItemVersionTool(IOptions<SitecoreSettings> options, SitecoreA
             return ErrorResultFromGraphQL(response.Errors);
         }
 
-        return response.Data.AddItemVersion.Item;
+        return ItemResult(response.Data.AddItemVersion.Item);
     }
 }
 
