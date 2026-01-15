@@ -34,3 +34,4 @@ At least _one_ authentication provider must be configured, executed in order:
 | Sitecore:CliUserFileAuthentication:EndpointName | `xmCloud`                                                       | The endpoint name to use                 |
 | Sitecore:CloudAuthentication:ClientId           |                                                                 | Id with access to authoring endpoint     |
 | Sitecore:CloudAuthentication:ClientSecret       |                                                                 | Secret with access to authoring endpoint |
+| Sitecore:ReadonlyMode                           | `false`                                                         | Disables all tools that mutates data     |

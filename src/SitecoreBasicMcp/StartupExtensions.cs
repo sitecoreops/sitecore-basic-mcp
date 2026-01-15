@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Protocol;
 using SitecoreBasicMcp.Authentication;
+using SitecoreBasicMcp.Tools;
 
 namespace SitecoreBasicMcp;
 
@@ -10,7 +11,12 @@ public static class StartupExtensions
 {
     public static IMcpServerBuilder AddSitecoreMcpServer(this IHostApplicationBuilder builder)
     {
-        builder.Services.Configure<SitecoreSettings>(builder.Configuration.GetSection(SitecoreSettings.Key));
+        var sitecoreSection = builder.Configuration.GetSection(SitecoreSettings.Key);
+        var sitecoreSettings = sitecoreSection.Get<SitecoreSettings>();
+
+        ArgumentNullException.ThrowIfNull(sitecoreSettings, nameof(sitecoreSettings));
+
+        builder.Services.Configure<SitecoreSettings>(sitecoreSection);
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCliUserFileAuthenticationProvider>();
         builder.Services.AddSingleton<IAuthenticationProvider, SitecoreCloudAuthenticationProvider>();
         builder.Services.AddSingleton<SitecoreAuthenticationService>();
@@ -18,8 +24,6 @@ public static class StartupExtensions
         var serverBuilder = builder.Services
             .AddHttpClient()
             .AddMcpServer()
-            .WithToolsFromAssembly(typeof(AssemblyMarker).Assembly)
-            .WithPromptsFromAssembly(typeof(AssemblyMarker).Assembly)
             .AddCallToolFilter(next => async (context, cancellationToken) =>
             {
                 try
@@ -35,6 +39,15 @@ public static class StartupExtensions
                     };
                 }
             });
+
+        if (sitecoreSettings.ReadonlyMode)
+        {
+            serverBuilder.WithTools<GetItemTool>();
+        }
+        else
+        {
+            serverBuilder.WithToolsFromAssembly(typeof(AssemblyMarker).Assembly);
+        }
 
         return serverBuilder;
     }
