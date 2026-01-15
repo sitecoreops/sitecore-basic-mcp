@@ -21,4 +21,6 @@ public class SitecoreSettings
         public string? ClientId { get; set; }
         public string? ClientSecret { get; set; }
     }
+
+    public bool ReadonlyMode { get; set; }
 }

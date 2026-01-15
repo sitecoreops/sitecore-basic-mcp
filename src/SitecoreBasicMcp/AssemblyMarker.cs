@@ -1,5 +1,5 @@
 namespace SitecoreBasicMcp;
 
-public class AssemblyMarker
+internal class AssemblyMarker
 {
 }
